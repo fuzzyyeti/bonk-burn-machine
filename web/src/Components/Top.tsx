@@ -219,7 +219,7 @@ export const Top = () => {
           <LaunchIcon style={{ color: "white" }}></LaunchIcon>
         </Box>
       )}
-      {mintedAmount === 5000 && (
+      {mintedAmount === 1000 && (
         <Box
           style={{
             textAlign: "center",

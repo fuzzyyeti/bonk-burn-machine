@@ -2,9 +2,10 @@
   "name": "scripts",
   "packageManager": "yarn@3.3.0",
   "devDependencies": {
-    "@types/node": "^18.11.18"
+    "@types/node": "^18.11.18",
+    "dotenv": "^16.0.3"
   },
   "dependencies": {
-    "dotenv": "^16.0.3"
+    "@metaplex-foundation/js": "^0.17.12"
   }
 }
