@@ -5,8 +5,7 @@ setting an amount of the token to burn within the mint instruction. There are th
 * Scripts to set up collections
 * The mint website
 
-Here is an example of a mint using this program. If your project burns $BONK for example, the minter can verify their $BONK has been burned on Solscan immediately after the mint completes. No need to wait for the team to keep their promise burn!
-[Mint Example](https://solscan.io/tx/2Hov8XACgcztovNQR95vMYcTrrW5UcpNanHgZDv7uyuqf8UBvRpT5KqqknZmjuuTKa5ExJKjme3mKFmmKQX4mdLM)
+Here is an example of a [mint](https://solscan.io/tx/2Hov8XACgcztovNQR95vMYcTrrW5UcpNanHgZDv7uyuqf8UBvRpT5KqqknZmjuuTKa5ExJKjme3mKFmmKQX4mdLM) using this program. If your project burns $BONK for example, the minter can verify their $BONK has been burned on Solscan immediately after the mint completes. No need to wait for the team to keep their promise to burn!
 
 Note: You can use this to create your own collection, but I don't have it set up to use without digging into the code. You will need to look at the code, understand it, and modify it where you need to. The program is deployed on mainnet, so you can use that part as-is, if you want.
 
