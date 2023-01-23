@@ -25,7 +25,8 @@ pub fn transfer_fee<'info>(
     owner: &AccountInfo<'info>,
     mint: &Account<'info, Mint>,
     token_program: &Program<'info, Token>,
-) -> ProgramResult {
+    user_burn_amount: u64,
+) -> Result<()> {
     if dev_fee > 0 {
         let transfer_instruction = Transfer{
             from: owner_ata.to_account_info(),
@@ -50,7 +51,10 @@ pub fn transfer_fee<'info>(
         );
         transfer(transfer_cpi_ctx, artist_fee)?;
     }
-    if burn_amount > 0 {
+    if user_burn_amount < burn_amount {
+        return Err(ErrorCode::NotEnoughBurn.into());
+    }
+    if user_burn_amount > 0 {
         let burn_instruction = Burn{
             mint: mint.to_account_info(),
             from: owner_ata.to_account_info(),
@@ -60,8 +64,8 @@ pub fn transfer_fee<'info>(
             token_program.to_account_info(),
             burn_instruction
         );
-        msg!("burning {} tokens with mint {}", burn_amount, mint.to_account_info().key);
-        burn(burn_cpi_ctx, burn_amount)?;
+        msg!("burning {} tokens with mint {}", user_burn_amount, mint.to_account_info().key);
+        burn(burn_cpi_ctx, user_burn_amount)?;
     }
     Ok(())
 }
@@ -242,7 +246,7 @@ pub mod bonk_mint {
         Ok(())
     }
 
-    pub fn mint_nft(ctx: Context<MintNft>) -> Result<()> {
+    pub fn mint_nft(ctx: Context<MintNft>, user_burn_amount: u64) -> Result<()> {
         if ctx.accounts.collection_state.next >= ctx.accounts.collection_state.total {
             return Err(ErrorCode::MintComplete.into());
         }
@@ -255,7 +259,8 @@ pub mod bonk_mint {
             &ctx.accounts.artist_token_ata,
             &ctx.accounts.owner,
             &ctx.accounts.token_mint,
-            &ctx.accounts.token_program
+            &ctx.accounts.token_program,
+            user_burn_amount,
             )?;
         mint_token(
             &ctx.accounts.nft_mint, 
@@ -291,19 +296,20 @@ pub mod bonk_mint {
         Ok(())
     }
 
-
-    pub fn update_authority_to_admin(ctx: Context<SetUpdateAuthorityToAdmin>) -> Result<()> {
-        set_update_authority_to_admin(
-            &ctx.accounts.metadata, 
-            &ctx.accounts.collection.to_account_info(), 
-            &ctx.accounts.admin, 
-            &ctx.accounts.metadata_program, 
-            ctx.accounts.collection.bump,
-        )?;
+    pub fn update_min_burn_amount(ctx: Context<UpdateMinBurnAmount>, burn_amount: u64) -> Result<()> {
+        ctx.accounts.collection.burn_amount = burn_amount;
         Ok(())
     }
+
 }
 
+#[derive(Accounts)]
+pub struct UpdateMinBurnAmount<'info> {
+    #[account(mut)]
+    admin: Signer<'info>,
+    #[account(mut, has_one = admin)]
+    collection: Box<Account<'info, Collection>>,
+}
 
 #[derive(Accounts)]
 pub struct MintNft<'info>{
@@ -353,24 +359,6 @@ pub struct MintNft<'info>{
     /// CHECK: Does not need additional check
     metadata_program: AccountInfo<'info>,
     rent: Sysvar<'info, Rent>
-}
-
-// This is only needed because I left the update-authority as
-// a PDA in gen 0 Bubble bonks. It shouldn't work
-// for new collections where the admin will already be the
-// update authority.
-#[derive(Accounts)]
-pub struct SetUpdateAuthorityToAdmin<'info> {
-    #[account(mut)]
-    admin: Signer<'info>,
-    #[account(mut, has_one = admin)]
-    collection: Box<Account<'info, Collection>>,
-    /// CHECK: Does not need additional check
-    #[account(mut)]
-    metadata: UncheckedAccount<'info>,
-    /// CHECK: Does not need additional check
-    #[account(address = mpl_token_metadata::ID)]
-    metadata_program: AccountInfo<'info>,
 }
 
 
@@ -426,4 +414,6 @@ pub struct Collection {
 pub enum ErrorCode {
     #[msg("No more items to mint")]
     MintComplete,
+    #[msg("User selected less than the minimum burn amount")]
+    NotEnoughBurn,
 }

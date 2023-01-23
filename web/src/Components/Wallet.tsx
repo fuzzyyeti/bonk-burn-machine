@@ -17,7 +17,7 @@ require("@solana/wallet-adapter-react-ui/styles.css");
 
 export const Wallet: FC = () => {
   // Set this to your own mainnet-beta RPC endpoint when ready to go live.
-  const endpoint = "https://api.devnet.solana.com";
+  const endpoint = "https://wider-bold-silence.solana-mainnet.quiknode.pro/8f39cf8e33b2ab0d4a6d022fea1bac60757ca5f0/";
 
   const wallets = useMemo(
     () => [

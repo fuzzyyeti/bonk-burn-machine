@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "declaration": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "target": "es2022",
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "es2022",
+			"DOM"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

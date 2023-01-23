@@ -129,13 +129,17 @@
           "name": "artistTokenAta",
           "isMut": true,
           "isSigner": false,
-          "docs": ["CHECKs Does not need additional check"]
+          "docs": [
+            "CHECKs Does not need additional check"
+          ]
         },
         {
           "name": "devTokenAta",
           "isMut": true,
           "isSigner": false,
-          "docs": ["CHECKs Does not need additional check"]
+          "docs": [
+            "CHECKs Does not need additional check"
+          ]
         },
         {
           "name": "metadata",
@@ -173,10 +177,15 @@
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "userBurnAmount",
+          "type": "u64"
+        }
+      ]
     },
     {
-      "name": "updateAuthorityToAdmin",
+      "name": "updateMinBurnAmount",
       "accounts": [
         {
           "name": "admin",
@@ -187,19 +196,14 @@
           "name": "collection",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "metadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "burnAmount",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -285,6 +289,11 @@
       "code": 6000,
       "name": "MintComplete",
       "msg": "No more items to mint"
+    },
+    {
+      "code": 6001,
+      "name": "NotEnoughBurn",
+      "msg": "User selected less than the minimum burn amount"
     }
   ]
 }

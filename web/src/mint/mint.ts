@@ -9,10 +9,10 @@ import {
   TOKEN_METADATA_PROGRAM_ID,
   TOKEN_MINT,
 } from "./constants";
-import { PublicKey } from "@solana/web3.js";
 import { getAccounts } from "./get_accounts";
-import { AnchorWallet } from "@solana/wallet-adapter-react";
-export const mintNft = async (program: Program<BonkMint>) => {
+import BN from "bn.js";
+
+export const mintNft = async (program: Program<BonkMint>, userBurn: BN) => {
   console.log("minter", program.provider.publicKey?.toBase58());
   const {
     mintKey,
@@ -31,7 +31,7 @@ export const mintNft = async (program: Program<BonkMint>) => {
   console.log("artist token ata", ARTIST_ATA.toBase58());
   console.log("equal?", col.tokenMint.toBase58(), TOKEN_MINT.toBase58());
   const tx = await program.methods
-    .mintNft()
+    .mintNft(userBurn)
     .accounts({
       admin: ADMIN,
       collection: COLLECTION,

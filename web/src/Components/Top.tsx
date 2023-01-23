@@ -12,6 +12,8 @@ import {
   CircularProgress,
   Toolbar,
   Typography,
+  Input,
+  autocompleteClasses,
 } from "@mui/material";
 import { BonkMint } from "../anchor/bonk_mint";
 import { purple } from "@mui/material/colors";
@@ -29,6 +31,7 @@ import styled from "styled-components";
 import mintflasher from "../images/bubble_burner.gif";
 import bonk_inu from "../images/bonk_inu.jpeg";
 import LaunchIcon from "@mui/icons-material/Launch";
+import BN from 'bn.js';
 
 const Flasher = styled.img`
    {
@@ -88,6 +91,7 @@ export const Top = () => {
   const [provider, setProvider] = useState<anchor.Provider | null>(null);
   const [successTx, setSuccessTx] = useState("");
   const [mintWaiter, setMintWaiter] = useState(false);
+  const [userBurn, setUserBurn] = useState(1000);
   useEffect(() => {
     console.log("checking wallets", program);
     if (anchorWallet?.publicKey && connection && !program) {
@@ -127,7 +131,7 @@ export const Top = () => {
     }
     try {
       setMintWaiter(true);
-      const tx = await mintNft(program!);
+      const tx = await mintNft(program!, new BN(userBurn).mul(new BN(100000)));
       setSuccessTx(tx);
     } catch (e) {
       setMintWaiter(false);
@@ -165,7 +169,7 @@ export const Top = () => {
 
       <Flasher src={mintflasher} />
       <Typography variant={"body2"} style={{ color: "white" }}>
-        Price: 5,000,000 BONK
+        Price: 1,000 $BONK or more. Your NFT will display your burn amount. 
       </Typography>
       <Typography variant={"body2"} style={{ color: "white" }}>
         100% of the mint and royalties will be burned
@@ -176,12 +180,17 @@ export const Top = () => {
       >
         Deflate the Bubble, burn the $BONK
       </Typography>
-      <Typography variant={"body2"} style={{ color: "white" }}>
-        Check your burn on Solscan once your mint is complete
-      </Typography>
       {!mintWaiter && mintedAmount < 5000 && (
+        <>
+        <Typography variant={"h4"} style={{margin: "auto" ,color: "white" }}>How much $BONK do you want to burn?</Typography>
+        <Input 
+          type="number"
+          style={{display: "block", width: "280px", backgroundColor: "white", color: "black", margin: "auto"}} 
+          value={userBurn} 
+          onChange={evt => setUserBurn(parseInt(evt.target.value))}></Input>
         <Button
           style={{
+            display: "block",
             backgroundColor: "#0a93f5",
             color: "white",
             borderRadius: 0,
@@ -189,11 +198,14 @@ export const Top = () => {
             width: "280px",
             marginTop: "20px",
             marginBottom: "20px",
+            marginRight: "auto",
+            marginLeft: "auto",
           }}
           onClick={mintWithBonk}
         >
           Mint
         </Button>
+        </>
       )}
       {mintWaiter && (
         <StyledProgress variant="indeterminate" value={mintedAmount} />

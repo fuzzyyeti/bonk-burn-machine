@@ -150,7 +150,7 @@ describe("bonk-mint", () => {
       console.log('admin', admin.publicKey.toBase58())
       console.log('artist', artist.publicKey.toBase58())
       console.log('creator', creator.toBase58())
-      await program.methods.mintNft().accounts({
+      await program.methods.mintNft(new BN(50000000000)).accounts({
         admin: admin.publicKey,
         collection,
         collectionState,
@@ -165,6 +165,13 @@ describe("bonk-mint", () => {
         masterEdition: masterEditionAccount, 
         metadataProgram: TOKEN_METADATA_PROGRAM_ID,
       }).signers([mintKey]).rpc();
+      
+      await program.methods.updateMinBurnAmount(new BN(100000000))
+      .accounts({
+        admin: admin.publicKey,
+        collection
+      }).signers([admin]).rpc();
+
 
 
       const anotherMintKey = anchor.web3.Keypair.generate();
@@ -192,7 +199,7 @@ describe("bonk-mint", () => {
               program.provider.publicKey,
             );
       console.log('admin here', admin.publicKey.toBase58())
-      await program.methods.mintNft().accounts({
+      await program.methods.mintNft(new BN(500000000)).accounts({
         admin: admin.publicKey,
         collection,
         collectionState,

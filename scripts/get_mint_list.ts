@@ -12,8 +12,7 @@ const parseTransactions = async () => {
     let last_sig = "";
     for (const tx of data) {
       if (tx.type === "NFT_MINT") {
-				 console.log(tx.signature)
-         // console.log(tx.accountData[1].account)
+          console.log(tx.accountData[1].account)
           last_sig = tx.signature;
       }
     }
