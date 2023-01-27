@@ -16,7 +16,7 @@ The anchor program has some the functionality of https://github.com/metaplex-fou
 There is a script to create a collection that you can run with ts-node. You will need to set all your own parameters. Make sure to use ATAs for the fees and not wallet addresses.
 
 ## Website
-The website is the code for https://mintbubble.xzy. It's a mess because I wanted to release as fast as humanly possible. The key part is the code in the mint folder, and you probably want to re-implement the rest.
+The website is the code for https://mintbubble.xyz. It's a mess because I wanted to release as fast as humanly possible. The key part is the code in the mint folder, and you probably want to re-implement the rest.
 
 ## Here are the basic steps to create and launch a project using the deployed version of this program
 * Create generative art with metadata .json files and image files
