@@ -11,6 +11,7 @@ import {
 } from "./constants";
 import { getAccounts } from "./get_accounts";
 import BN from "bn.js";
+import {ComputeBudgetProgram} from "@solana/web3.js";
 
 export const mintNft = async (program: Program<BonkMint>, userBurn: BN) => {
   console.log("minter", program.provider.publicKey?.toBase58());
@@ -30,6 +31,9 @@ export const mintNft = async (program: Program<BonkMint>, userBurn: BN) => {
   console.log("dev token ata", DEV_ATA.toBase58());
   console.log("artist token ata", ARTIST_ATA.toBase58());
   console.log("equal?", col.tokenMint.toBase58(), TOKEN_MINT.toBase58());
+  const increaseBudget = ComputeBudgetProgram.setComputeUnitLimit({
+      units: 250000,
+  });
   const tx = await program.methods
     .mintNft(userBurn)
     .accounts({
@@ -48,6 +52,7 @@ export const mintNft = async (program: Program<BonkMint>, userBurn: BN) => {
       metadataProgram: TOKEN_METADATA_PROGRAM_ID,
     })
     .signers([mintKey])
+    .preInstructions([increaseBudget])
     .rpc();
 
   console.log(tx);

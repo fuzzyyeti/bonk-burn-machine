@@ -11,3 +11,4 @@ web/node_modules
 web/.cache
 upload
 .editorconfig
+.idea
